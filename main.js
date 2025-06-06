@@ -3,11 +3,11 @@ async function triggerFetch() {
     const res = await fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary");
     const data = await res.json();
     const imageUrl = data.thumbnail?.source || "https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png";
-document.getElementById("image-container").innerHTML = `
-  <p>Obrázek z Wikipedie:</p>
-  <img src="${imageUrl}" alt="wiki obrazek" style="max-width:300px;">
-`;
 
+    document.getElementById("image-container").innerHTML = `
+      <p>Obrázek z Wikipedie:</p>
+      <img src="${imageUrl}" alt="wiki obrazek" style="max-width:300px;">
+    `;
 
     if (!("Notification" in window)) return;
     const permission = await Notification.requestPermission();
@@ -24,4 +24,9 @@ document.getElementById("image-container").innerHTML = `
   } catch (e) {
     console.error("Chyba při načítání obrázku:", e);
   }
+}
+
+// Auto-trigger if URL includes ?auto
+if (window.location.search.includes("auto")) {
+  window.addEventListener("load", triggerFetch);
 }
