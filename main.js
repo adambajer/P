@@ -26,7 +26,6 @@ async function triggerFetch() {
   }
 }
 
-// Auto-trigger if URL includes ?auto
 if (window.location.search.includes("auto")) {
   window.addEventListener("load", triggerFetch);
 }

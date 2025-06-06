@@ -2,12 +2,21 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <title>P</title>
+  <title>Pípač</title>
   <link rel="icon" href="data:,">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-   <button onclick="triggerFetch()">Fetch </button>
+  <h1>Obrázkový Pípač</h1>
+  <button onclick="triggerFetch()">Zobraz obrázek</button>
   <div id="image-container"></div>
   <script src="main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').then(() => {
+        console.log("Service worker registered");
+      });
+    }
+  </script>
 </body>
 </html>
