@@ -1,26 +1,27 @@
-async function fetchAndNotify() {
-  const imageUrl = await getRandomWikiImage();
-  if (!("Notification" in window)) return alert("Notifikace nejsou podporovány");
+async function triggerFetch() {
+  try {
+    const res = await fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary");
+    const data = await res.json();
+    const imageUrl = data.thumbnail?.source || "https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png";
+document.getElementById("image-container").innerHTML = `
+  <p>Obrázek z Wikipedie:</p>
+  <img src="${imageUrl}" alt="wiki obrazek" style="max-width:300px;">
+`;
 
-  const permission = await Notification.requestPermission();
-  if (permission !== "granted") return alert("Notifikace zakázány");
 
-  const beep = new Audio("beep.mp3");
-  beep.play();
+    if (!("Notification" in window)) return;
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") return;
 
-  new Notification("Obrázek je tu!", {
-    body: "Náhodný obrázek z Wikipedie",
-    icon: imageUrl,
-    image: imageUrl
-  });
-}
+    new Notification("Obrázek je tu!", {
+      body: "Náhodný obrázek z Wikipedie",
+      icon: imageUrl,
+      image: imageUrl
+    });
 
-async function getRandomWikiImage() {
-  const res = await fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary");
-  const data = await res.json();
-  return data.thumbnail?.source || "https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png";
-}
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
+    const beep = new Audio("beep.mp3");
+    beep.play().catch(e => console.warn("Zvuk nelze přehrát:", e));
+  } catch (e) {
+    console.error("Chyba při načítání obrázku:", e);
+  }
 }
