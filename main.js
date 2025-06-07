@@ -5,8 +5,7 @@ async function triggerFetch() {
         const imageUrl = data.thumbnail?.source || "https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png";
 
         document.getElementById("image-container").innerHTML = `
-            <p>Obrázek z Wikipedie:</p>
-            <img src="${imageUrl}" alt="wiki obrazek" style="max-width:300px;">
+             <img src="${imageUrl}" alt="wiki obrazek" >
         `;
 
         if (!("Notification" in window)) return;
@@ -16,17 +15,13 @@ async function triggerFetch() {
         // Send a message to the service worker to display the notification
         if (navigator.serviceWorker.controller) {
             navigator.serviceWorker.controller.postMessage({
-                type: 'DISPLAY_NOTIFICATION',
-                title: "Obrázek je tu!",
-                body: "Náhodný obrázek z Wikipedie",
-                icon: imageUrl,
+                type: 'DISPLAY_NOTIFICATION', 
                 image: imageUrl
             });
         } else {
             // Fallback for cases where service worker isn't active (shouldn't happen if registered)
             new Notification("Obrázek je tu!", {
-                body: "Náhodný obrázek z Wikipedie",
-                icon: imageUrl,
+                 icon: imageUrl,
                 image: imageUrl
             });
         }
